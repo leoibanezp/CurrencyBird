@@ -4,9 +4,8 @@ var apiMiddleware = require('./Services/apiMiddleware');
 var paymentRouter = require('./Services/payment');
 var paymentStatusRouter = require('./Services/paymentStatus');
 
-app.use('/Payment', apiMiddleware);
+app.use('/', apiMiddleware);
 app.post('/Payment', paymentRouter);
-app.use('/PaymentStatus', apiMiddleware);
 app.post('/PaymentStatus', paymentStatusRouter);
 
 app.listen(3000, () => {
