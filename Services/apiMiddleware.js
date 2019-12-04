@@ -5,15 +5,16 @@ var Verify = require('../lib/verify.js');
 var app = express();
 app.use(bodyParser.json());
 const options = {
-    pubkey: fs.readFileSync("./keys/pubkey.pem")
+    api_secretKey: Buffer.from(fs.readFileSync("./keys/api_secret.key")),
+    client_publicKey: Buffer.from(fs.readFileSync("./keys/client_public.key")),
 };
 
 app.use(function (req, res, next) {
-    let pubkey = options.pubkey.toString('ascii')
-    if (req.headers.authorization !== undefined) {
+    console.log('API Request')
+    if (req.headers.validation !== undefined) {
         const message = req.body
-        const signedMessage = req.headers.authorization
-        const isValid = Verify.getSignatureVerify(message, signedMessage, pubkey)
+        const validation = JSON.parse(req.headers.validation)
+        const isValid = Verify.getSignatureVerify(message, validation.signedMessage, validation.nonce, options.client_publicKey, options.api_secretKey)
 
         if (isValid) {
             next();
